@@ -155,8 +155,6 @@ public class Process {
 
         int tamanho_arquivo = new BigInteger(bais.readNBytes(bais.read())).intValue();
         int qtd_parts = new BigInteger(bais.readNBytes(bais.read())).intValue();
-        System.out.println(tamanho_arquivo);
-        System.out.println(qtd_parts);
 
         do {
             byte[] ip = bais.readNBytes(bais.read());

@@ -147,6 +147,20 @@ public class Cliente {
         return Arrays.copyOfRange(buffer, 0, len);
     }
 
+    public static void help() {
+        System.out.println("----------------------");
+        System.out.println("Lista de Comandos");
+        System.out.println("add [nome do arquivo]: cria um arquivo compartilhavel");
+        System.out.println("ex: add test.txt");
+        System.out.println("download [nome do arquivo]: inicia o download do arquivo");
+        System.out.println("ex: download test.txt");
+        System.out.println("search [query]: busca arquivos aprtir de uma string");
+        System.out.println("ex: search test");
+        System.out.println("help: exibe a lista de comandos");
+        System.out.println("----------------------");
+        System.out.print("$>");
+    }
+
     public static void main(String[] args) throws UnknownHostException {
 
         // ClientPeer.ClientAwait
@@ -163,6 +177,7 @@ public class Cliente {
         List<String> download_available = new ArrayList<>();
 
         Scanner reader = new Scanner(System.in); // ler mensagens via teclado
+        help();
         do {
             raw_message = reader.nextLine();
             String[] message = raw_message.split(" ");
@@ -171,6 +186,9 @@ public class Cliente {
             Arquivo arquivo = Arquivos.info(shared_folder + file_name);
             System.out.println(arquivo.getFile_name());
             switch (message[0]) {
+                case "help":
+                    help();
+                    break;
                 case "add":
                     byte[] data = process.upload(shared_folder + file_name, port_dst_UDP);
                     byte[] reply = send(data, server_address, server_port);
@@ -183,7 +201,11 @@ public class Cliente {
                     List<String> list = process.search(reply);
                     if (verbose && list.size() > 0) {
                         download_available.addAll(list);
-                        System.out.printf("C: Lista de downloads possiveis atualizada!!%n");
+                        if (verbose)
+                            System.out.printf("C: Lista de downloads possiveis atualizada!!%n");
+                        for (String a : download_available) {
+                            System.out.println(a);
+                        }
                     } else
                         System.out.printf("C: Não foi encontrado arquivos!!%n");
                     break;
