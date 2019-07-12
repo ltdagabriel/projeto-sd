@@ -58,7 +58,8 @@ public class Arquivos {
     }
 
     static Arquivo info(String file_name) {
-        return new Arquivo(file_name);
+        Arquivo a = new Arquivo(file_name);
+        return a;
     }
 
 }

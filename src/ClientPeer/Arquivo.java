@@ -33,7 +33,11 @@ public class Arquivo {
     }
 
     long size() {
-        return (long) bytes;
+        return file.length();
+    }
+
+    public boolean exists(){
+        return file.exists();
     }
 
     public int getPart() {

@@ -9,10 +9,10 @@ import java.util.*;
 public class Cliente {
     private static boolean verbose = true;
     private static Process process = new Process(verbose);
-    private static final String shared_folder = "download/";
+    private static final String shared_folder = "download2/";
     private static final int part_size = 16 * 1024 * 1024;
-    private static final int port_dst_UDP = 6667;
-    private static final int port_dst_TCP = 6668;
+    private static final int port_dst_UDP = 5667;
+    private static final int port_dst_TCP = 5668;
     private static final int packet_length = 32 * 1024;
 
     private static Download send_UDP(InetAddress ip, int port, byte[] data) {
@@ -54,7 +54,7 @@ public class Cliente {
             Socket socket = null;
             try {
                 socket = new Socket(download.getAddress(), download.getPort());
-                if (verbose) System.out.println(MessageFormat.format("C: Criando Thread <--> {0}",
+                if (verbose) System.out.println(MessageFormat.format("C: Iniciando conexão com {0}",
                         socket.getRemoteSocketAddress()));
 
 
@@ -76,6 +76,9 @@ public class Cliente {
 
                     Arquivo arquivo = process.download(Arrays.copyOfRange(data, 0, len));
 
+                    if (verbose)
+                        System.out.println(MessageFormat.format("C: Recebido {0}b de {1}", arquivo.getData().length,
+                                socket.getRemoteSocketAddress()));
                     try {
                         arquivos.escreve_no_arquivo(shared_folder + arquivo.getFile_name(),
                                 arquivo.getData(), arquivo.getPart() + i);
@@ -88,7 +91,7 @@ public class Cliente {
                     }
                 } while (i < part_size);
 
-                if (verbose) System.out.println(MessageFormat.format("C: Finalizando Thread UDP<--> {0}",
+                if (verbose) System.out.println(MessageFormat.format("C: Conexão com {0} finalizada",
                         socket.getRemoteSocketAddress()));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -101,6 +104,8 @@ public class Cliente {
         new Thread(() -> {
             if (verbose)
                 System.out.println(MessageFormat.format("C: Preparando para baixar arquivo {0}", file.getName()));
+
+            System.out.printf("Preparando para baixar %d partes %n", file.getPartCount());
             for (int i = 0; i < file.getPartCount(); i++) {
                 List<Peer> peers = file.getPeers();
                 Collections.shuffle(peers);
@@ -189,13 +194,16 @@ public class Cliente {
                     break;
                 case "add":
                     byte[] data = process.upload(shared_folder + file_name, port_dst_UDP);
-                    byte[] reply = send(data, server_address, server_port);
-                    if (verbose)
-                        System.out.printf("C: A adição de %s ao tracker %s!!%n", file_name, reply[2] > 0 ? "sucesso" : "falha");
+                    if (data.length > 0) {
+                        send(data, server_address, server_port);
+                    }
+                    if (verbose) {
+                        System.out.printf("C: A adição de %s ao tracker %s!!%n", file_name, data.length > 0 ? "sucesso" : "falha");
+                    }
                     break;
                 case "search":
                     data = process.search(file_name, 11);
-                    reply = send(data, server_address, server_port);
+                    byte[] reply = send(data, server_address, server_port);
                     List<String> list = process.search(reply);
                     if (verbose && list.size() > 0) {
                         download_available.addAll(list);

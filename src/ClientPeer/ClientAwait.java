@@ -12,7 +12,7 @@ class ClientAwait {
     private Process process;
     private boolean verbose;
 
-    private static final String shared_folder = "download/";
+    private static final String shared_folder = "download2/";
     private static final int packet_length = 32*1024;
     private static final int part_size = 16 * 1024 * 1024;
 

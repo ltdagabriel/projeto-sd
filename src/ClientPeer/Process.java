@@ -46,7 +46,7 @@ public class Process {
         try {
             do {
                 StringBuilder name = new StringBuilder();
-                for (byte c : bais.readNBytes(bais.read())) name.append((char)c);
+                for (byte c : bais.readNBytes(bais.read())) name.append((char) c);
                 list.add(name.toString());
             } while (bais.available() > 0);
 
@@ -60,6 +60,10 @@ public class Process {
     byte[] upload(String file, int udp) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Arquivo arquivo = Arquivos.info(file);
+        if (!arquivo.exists()) {
+            return new byte[0];
+        }
+
         baos.write(0);
         baos.write(10);
         baos.write(arquivo.getFile_name().length());
