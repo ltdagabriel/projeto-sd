@@ -53,15 +53,15 @@ public class Arquivo {
     }
 
     public byte[] getMd5() {
-        InputStream is = null;
-        try {
-            is = Files.newInputStream(this.file.toPath());
-            MessageDigest m = MessageDigest.getInstance("MD5");
-            DigestInputStream dis = new DigestInputStream(is, m);
-            return m.digest();
-        } catch (IOException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+//        InputStream is = null;
+//        try {
+//            is = Files.newInputStream(this.file.toPath());
+//            MessageDigest m = MessageDigest.getInstance("MD5");
+//            DigestInputStream dis = new DigestInputStream(is, m);
+//            return m.digest();
+//        } catch (IOException | NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
         return new byte[0];
     }
 }

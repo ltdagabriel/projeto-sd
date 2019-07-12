@@ -105,8 +105,6 @@ public class Cliente {
                 List<Peer> peers = file.getPeers();
                 Collections.shuffle(peers);
                 for (Peer address : peers) {
-                    System.out.println(address.ip);
-                    System.out.println(address.port);
                     byte[] data = process.download(file.getName(), i * part_size, 0, 100);
 
                     Download download = send_UDP(address.ip, address.port, data);
